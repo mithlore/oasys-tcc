@@ -1,14 +1,12 @@
 // Arte da tela de login (RF01): "Portal do OASYS".
-// A logo oficial fica no centro, cercada por anéis que giram bem devagar. Na órbita externa
-// estão os 10 elos (do Ferro à Lenda Absoluta), um ponto de cada cor.
+// A logo oficial fica no centro, com um brilho violeta atrás.
 // O fundo é um céu com constelações de verdade (Cruzeiro do Sul, Órion e Cassiopeia),
 // desenhadas à mão: estrelas de brilhos diferentes, ligadas por linhas finas.
-// PARALLAX: as camadas (céu, constelações, anéis e logo) se movem em quantidades diferentes
+// PARALLAX: as camadas (céu, constelações e logo) se movem em quantidades diferentes
 // quando o mouse anda, o que dá sensação de profundidade. Quem usa "reduzir movimento" no
 // sistema vê tudo parado.
 // Tudo é SVG/CSS próprio: sem imagem externa e sem emoji.
 import { useEffect, useRef } from "react";
-import { ELOS } from "@/lib/elos";
 import LogoOasys from "@/components/LogoOasys";
 
 // Gerador de números "aleatórios" fixos (mulberry32): o céu fica sempre igual em toda visita.
@@ -69,14 +67,9 @@ const CONSTELACOES: Constelacao[] = [
 // Estrelas que piscam devagar (só algumas, e em tempos diferentes, como no céu de verdade)
 const PISCA: Record<string, number[]> = { "Cruzeiro do Sul": [1], "Órion": [0, 7], "Cassiopeia": [4] };
 
-// Centro do portal e raio da órbita dos elos
-const CX = 400;
-const CY = 450;
-const RAIO_ELOS = 290;
-
 // Quanto cada camada anda (em pixels) quando o mouse vai de um canto ao outro.
 // Camadas distantes andam pouco; as próximas andam mais.
-const PROFUNDIDADE = { ceu: 8, constelacoes: 18, aneis: 30, logo: 46 };
+const PROFUNDIDADE = { ceu: 8, constelacoes: 18, logo: 40 };
 
 export default function ArteLogin() {
   const raiz = useRef<HTMLDivElement>(null);
@@ -178,41 +171,7 @@ export default function ArteLogin() {
         </svg>
       </div>
 
-      {/* Camada 3: anéis e a órbita dos elos */}
-      <div className="parallax-camada absolute -inset-[6%]" style={camada(PROFUNDIDADE.aneis)} aria-hidden="true">
-        <svg viewBox="0 0 800 900" preserveAspectRatio="xMidYMid slice" className="h-full w-full">
-          {/* Anéis: cada um gira num ritmo e sentido diferentes (70 a 150 segundos por volta) */}
-          <g fill="none" stroke="#a78bfa">
-            <circle cx={CX} cy={CY} r="130" strokeOpacity="0.35" />
-            <g className="portal-gira" style={{ animationDuration: "70s" }}>
-              <circle cx={CX} cy={CY} r="180" strokeOpacity="0.45" strokeDasharray="2 8" />
-            </g>
-            <g className="portal-gira" style={{ animationDuration: "110s", animationDirection: "reverse" }}>
-              <circle cx={CX} cy={CY} r="235" strokeOpacity="0.4" strokeDasharray="60 18 6 18" />
-            </g>
-
-            {/* Órbita externa com os 10 elos igualmente espaçados */}
-            <g className="portal-gira" style={{ animationDuration: "150s" }}>
-              <circle cx={CX} cy={CY} r={RAIO_ELOS} strokeOpacity="0.22" />
-              {ELOS.map((elo, i) => {
-                // ângulo de cada elo: 360° dividido em 10, começando no alto
-                const ang = (i / ELOS.length) * Math.PI * 2 - Math.PI / 2;
-                const x = CX + RAIO_ELOS * Math.cos(ang);
-                const y = CY + RAIO_ELOS * Math.sin(ang);
-                const ultimo = i === ELOS.length - 1; // Lenda Absoluta: maior e com halo dourado
-                return (
-                  <g key={elo.chave} stroke="none">
-                    {ultimo && <circle cx={x} cy={y} r="20" fill="#fde047" opacity="0.22" />}
-                    <circle cx={x} cy={y} r={ultimo ? 9 : 6} fill={elo.cor2} />
-                  </g>
-                );
-              })}
-            </g>
-          </g>
-        </svg>
-      </div>
-
-      {/* Camada 4: logo oficial no centro (a que mais se move, por estar "mais perto") */}
+      {/* Camada 3: logo oficial no centro (a que mais se move, por estar "mais perto") */}
       <div className="parallax-camada absolute inset-0 grid place-items-center" style={camada(PROFUNDIDADE.logo)}>
         <div className="drop-shadow-[0_0_40px_rgba(167,139,250,0.55)]">
           <LogoOasys tamanho={190} />
