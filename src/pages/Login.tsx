@@ -8,6 +8,7 @@ import { erroDaSenha, erroDoEmail, TAMANHO_MINIMO_SENHA } from "@/lib/validacao"
 import { cn } from "@/lib/utils";
 import ArteLogin from "@/components/login/ArteLogin";
 import LogoOasys from "@/components/LogoOasys";
+import WordmarkOasys from "@/components/WordmarkOasys";
 import {
   IconeAlerta,
   IconeCarregando,
@@ -89,7 +90,7 @@ export default function Login() {
         <div className="mb-8 flex flex-col items-center gap-3">
           {/* No computador a logo grande já está na arte ao lado; aqui ela só aparece no celular */}
           <LogoOasys tamanho={72} className="lg:hidden" />
-          <p className="font-titulo text-3xl font-bold tracking-[0.35em]">OASYS</p>
+          <WordmarkOasys altura={34} className="mx-auto" />
         </div>
 
         <div className="rounded-2xl border border-linha bg-painel p-6 sm:p-8">

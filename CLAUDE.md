@@ -267,7 +267,7 @@ Todas responsivas (RNF04). Mostrar estados de carregamento, vazio e erro.
 
 **A home já está desenhada.** O arquivo `design/oasys-home-prototipo.html` é a **referência visual oficial**. Ele é HTML estático com dados de exemplo. Convertê-lo para React (`src/pages/Home.tsx` + componentes em `src/components/home/`), mantendo layout, cores, fontes e animações, e trocando os dados fictícios por consultas ao Supabase.
 
-**Visual (manter):** fundo `#0c0e14`, violeta `#a78bfa` / `#6d28d9`, azul `#3b82f6`, dourado `#fde047` (raridade lendária). Fontes: Outfit (títulos), DM Sans (texto), uma só família de títulos (Outfit); sem fonte serifada de destaque, carregadas pelo Google Fonts. As variáveis CSS do `:root` do protótipo viram o tema do Tailwind.
+**Visual (manter):** fundo `#0c0e14`, violeta `#a78bfa` / `#6d28d9`, azul `#3b82f6`, dourado `#fde047` (raridade lendária). Fontes: Outfit (títulos) e DM Sans (texto), sem fonte serifada de destaque, carregadas pelo Google Fonts. As variáveis CSS do `:root` do protótipo viram o tema do Tailwind.
 
 **Seções (de cima para baixo) e de onde vem cada dado:**
 
@@ -374,6 +374,7 @@ oasys/
 - **Pendente:** `conceder-xp` (XP por ações como avaliar e comentar), a implementar com a tabela de XP da seção 12.
 - **Login e cadastro feitos (RF01):** `src/hooks/useAuth.tsx` (AuthProvider), `src/pages/Login.tsx`, `src/components/RotaProtegida.tsx` (todas as telas exigem login, só `/login` é aberta), `src/hooks/usePerfil.ts`, `src/lib/validacao.ts` (com testes) e ícones SVG em `src/components/icons/Icones.tsx`. O cabeçalho mostra elo, nível e nome. Falta testar o cadastro e o login reais com o Supabase (o ambiente do Claude não alcança o Supabase pelo navegador; testar no computador dos autores). No painel do Supabase, em Authentication, decidir se "Confirm email" fica ligado (em desenvolvimento é mais prático desligar).
 - **Arte da tela de login ("Portal do OASYS"):** `src/components/login/ArteLogin.tsx` (logo oficial no centro, anéis girando devagar, os 10 elos na órbita externa, céu de estrelas, pontinhos que derivam devagar e parallax com o mouse (sem constelações, a pedido dos autores); SVG/CSS próprio, sem emoji; aparece só a partir de `lg`; parada com "reduzir movimento").
+- **Escrita "OASYS":** `src/components/WordmarkOasys.tsx` (letras desenhadas em SVG: O aberto, A sem travessa, S cortados, Y com vão), usada no cabeçalho e no login.
 - **Logo oficial:** `src/components/LogoOasys.tsx` (SVG vetorizado da logo dos autores: lua crescente, estrela e dunas, degradê lavanda a violeta). Usar sempre este componente, nunca uma lua desenhada à parte. Aparece no login e no cabeçalho.
 - **Home, etapa 1 (RF15, RF16, RF24):** `src/pages/Home.tsx` com `src/components/home/HeroHome.tsx` (nível, barra de XP, semana de check-ins domingo a sábado, botão de check-in que chama a Edge Function `checkin`) e `ProgressaoElos.tsx` (escada dos 10 elos), mais `src/hooks/useCheckin.ts`. Faltam as seções que dependem do catálogo (continue sua jornada, ranking, recomendações, santuário, biblioteca, amigos, coleções, arquétipos, spotlight).
 - **Próximo:** home em React (demais seções) (a partir de `design/`), catálogo e o restante das telas; por fim o seed do catálogo (seção 9).

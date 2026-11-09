@@ -7,6 +7,7 @@ import { usePerfil } from "@/hooks/usePerfil";
 import { obterElo } from "@/lib/elos";
 import { IconeElo, IconeSair } from "@/components/icons/Icones";
 import LogoOasys from "@/components/LogoOasys";
+import WordmarkOasys from "@/components/WordmarkOasys";
 
 const LINKS = [
   { para: "/", rotulo: "Início" },
@@ -31,7 +32,7 @@ export default function Layout() {
           {/* Logo + nome no canto esquerdo do cabeçalho */}
           <span className="flex items-center gap-3">
             <LogoOasys tamanho={30} />
-            <span className="font-titulo text-xl font-bold tracking-[0.3em]">OASYS</span>
+            <WordmarkOasys altura={22} />
           </span>
           <ul className="flex flex-wrap gap-1">
             {LINKS.map((l) => (
