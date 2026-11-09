@@ -351,7 +351,7 @@ oasys/
 
 ## 15-B. Estado atual do código (atualizar a cada etapa)
 
-- **Feito:** base Vite+React+TS+Tailwind com tema e rotas provisórias; `src/lib/{xp,elos,datas,afinidade}.ts` com testes (`npm test`); migrações `supabase/migrations/0001_init.sql` e `0002_permissoes.sql` (16 tabelas, RLS em todas, GRANTs explícitos: no Supabase deixar "Automatically expose new tables" desligado, funções `conceder_xp`, `gastar_giro`, `aceitar_troca`) e teste de segurança do banco (`npm run test:rls`, 35 verificações).
+- **Feito:** base Vite+React+TS+Tailwind com tema e rotas provisórias; `src/lib/{xp,elos,datas,afinidade}.ts` com testes (`npm test`); migrações `0001_init.sql`, `0002_permissoes.sql` e `0003_endurecer_funcoes.sql` em `supabase/migrations/` (16 tabelas, RLS em todas, GRANTs explícitos, funções `conceder_xp`, `gastar_giro`, `aceitar_troca`), **já aplicadas** no projeto Supabase `Oasys` (região us-east-1; "Automatically expose new tables" desligado e "automatic RLS" ligado). Restam 3 avisos do verificador do Supabase sobre `eh_admin`, `eh_equipe` e `papel_atual` (executáveis por usuário logado): são intencionais, as políticas RLS dependem delas e elas só devolvem o papel de quem chama e teste de segurança do banco (`npm run test:rls`, 35 verificações).
 - **Próximo:** Edge Functions `checkin`, `girar-roleta`, `aceitar-troca`, `conceder-xp`; depois login, home em React (a partir de `design/`), catálogo e o restante das telas; por fim o seed do catálogo (seção 9).
 - **Antes de mexer no banco:** rodar `npm run test:rls`; ao criar tabela nova, ligar o RLS e acrescentar o caso ao teste.
 
