@@ -13,6 +13,11 @@ export default {
         azul: "#3b82f6",
         ouro: "#fde047",
       },
+      // Animação de entrada discreta: sobe 8 px e aparece em 220 ms (sem efeitos constantes).
+      keyframes: {
+        entrar: { from: { opacity: "0", transform: "translateY(8px)" }, to: { opacity: "1", transform: "translateY(0)" } },
+      },
+      animation: { entrar: "entrar 220ms ease-out both" },
       fontFamily: {
         titulo: ["Outfit", "sans-serif"],
         texto: ["DM Sans", "sans-serif"],
