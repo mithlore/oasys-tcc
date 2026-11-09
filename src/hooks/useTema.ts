@@ -32,6 +32,7 @@ export function useTema() {
   // Navegador sem suporte, ou usuário com "reduzir movimento": troca direto, sem animação.
   const definir = useCallback((novo: Tema) => {
     const html = document.documentElement;
+    setTema(novo); // o botão já começa a deslizar na hora, sem esperar a troca de cores
     // Troca a classe, lembra a escolha e avisa os botões. Com a animação, isto roda no meio da transição.
     const aplicar = () => {
       html.classList.toggle("claro", novo === "claro");
@@ -45,15 +46,19 @@ export function useTema() {
     const semAnimacao = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (typeof document.startViewTransition === "function" && !semAnimacao) {
       // "tema-trocando" desliga as transições comuns durante o efeito, para a foto "depois" já sair com as cores finais
-      html.classList.add("tema-trocando");
-      const transicao = document.startViewTransition(aplicar);
-      void transicao.finished.finally(() => html.classList.remove("tema-trocando"));
+      // Espera 350 ms antes de pintar a tela: assim dá tempo de ver a bolinha do botão deslizar (0,4 s) primeiro
+      window.setTimeout(() => {
+        html.classList.add("tema-trocando");
+        const transicao = document.startViewTransition(aplicar);
+        void transicao.finished.finally(() => html.classList.remove("tema-trocando"));
+      }, 350);
     } else {
       aplicar();
     }
   }, []);
 
-  const alternar = useCallback(() => definir(temaAtual() === "claro" ? "escuro" : "claro"), [definir]);
+  // usa o estado do botão (que muda na hora), assim dois cliques seguidos não se confundem
+  const alternar = useCallback(() => definir(tema === "claro" ? "escuro" : "claro"), [definir, tema]);
 
   return { tema, definir, alternar };
 }

@@ -42,7 +42,7 @@ body {
    Durante a troca o navegador mantém duas fotos da tela: a antiga (embaixo) e a nova (em cima).
    A foto nova aparece por uma máscara em degradê que desce, então a cor nova vai "pintando" a página,
    com a borda suave, da parte de cima até a de baixo. */
-html.tema-trocando * { transition: none !important; }
+html.tema-trocando *:not(.tema-switch, .tema-switch *) { transition: none !important; } /* o botão de tema mantém a animação dele */
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 ::view-transition-old(root) { z-index: 1; }
 ::view-transition-new(root) {
@@ -62,87 +62,48 @@ html.tema-trocando * { transition: none !important; }
 }
 
 /* ====== Botão de modo claro/escuro (BotaoTema.tsx) ======
-   Baseado no "toggle" de mobinkakei (Uiverse.io), adaptado: sem os textos AM/PM, em tamanho de cabeçalho
-   (a escala é reduzida no .tema-caixa) e usando o teclado/leitor de tela (checkbox de verdade).
-   Desmarcado = dia (sol, modo claro). Marcado = noite (lua e estrelas, modo escuro). */
-.tema-caixa { position: relative; display: inline-block; width: 56px; height: 31px; flex: none; }
-.tema-toggle { position: absolute; left: 0; top: 0; transform: scale(0.62); transform-origin: left top; cursor: pointer; display: block; }
-/* o checkbox fica escondido, mas continua focável pelo teclado */
-.tema-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
-.tema-trilho {
-  display: inline-block; position: relative; width: 90px; height: 50px;
-  background-color: #83d8ff; border-radius: 84px;
-  transition: background-color 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+   Interruptor de satyamchaudharydev (Uiverse.io), adaptado: usa as cores do tema, tem contorno para aparecer
+   no fundo claro e funciona com o teclado. Desmarcado = dia (bolinha rosa/laranja, modo claro).
+   Marcado = noite (bolinha vira uma lua). A bolinha desliza e muda de forma com transição de 0,4 s. */
+.tema-switch {
+  display: block;
+  font-size: 16px; /* as medidas em "em" partem deste tamanho */
+  --largura: 3.5em;
+  --altura: 2em;
+  --tamanho-icone: 1.4em; /* tamanho da bolinha (sol e lua) */
+  --margem: 0.3em;        /* "respiro" entre a bolinha e a borda */
+  position: relative;
+  width: var(--largura);
+  height: var(--altura);
+  flex: none;
 }
-.tema-input:focus-visible + .tema-trilho { outline: 3px solid rgb(var(--c-violeta)); outline-offset: 4px; }
-/* a bolinha: sol (dia) que vira lua (noite) */
-.tema-manopla {
-  display: inline-block; position: relative; z-index: 1; top: 3px; left: 3px; width: 44px; height: 44px;
-  background-color: #ffcf96; border-radius: 50px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  transition: all 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55); transform: rotate(-45deg);
+/* o checkbox fica invisível, mas continua focável pelo teclado */
+.tema-switch input { opacity: 0; width: 0; height: 0; }
+.tema-slider {
+  position: absolute; inset: 0; cursor: pointer;
+  background-color: #f4f4f5;
+  box-shadow: inset 0 0 0 1px rgb(var(--c-tinta) / 0.18); /* contorno fino: sem ele o botão some no fundo claro */
+  transition: 0.4s;
+  border-radius: 30px;
 }
-.tema-cratera { position: absolute; background-color: #e8cda5; opacity: 0; transition: opacity 200ms ease-in-out; border-radius: 100%; }
-.tema-cratera.c1 { top: 18px; left: 10px; width: 4px; height: 4px; }
-.tema-cratera.c2 { top: 28px; left: 22px; width: 6px; height: 6px; }
-.tema-cratera.c3 { top: 10px; left: 25px; width: 8px; height: 8px; }
-/* "nuvens" (dia) que viram estrelas (noite) */
-.tema-estrela { position: absolute; background-color: #fff; border-radius: 50%; transition: all 300ms cubic-bezier(0.445, 0.05, 0.55, 0.95); }
-.tema-estrela.e1 { top: 10px; left: 35px; z-index: 0; width: 30px; height: 3px; }
-.tema-estrela.e2 { top: 18px; left: 28px; z-index: 1; width: 30px; height: 3px; }
-.tema-estrela.e3 { top: 27px; left: 40px; z-index: 0; width: 30px; height: 3px; }
-.tema-estrela.e4, .tema-estrela.e5, .tema-estrela.e6 { opacity: 0; transition: all 300ms 0s cubic-bezier(0.445, 0.05, 0.55, 0.95); }
-.tema-estrela.e4 { top: 16px; left: 11px; z-index: 0; width: 2px; height: 2px; transform: translate3d(3px, 0, 0); }
-.tema-estrela.e5 { top: 32px; left: 17px; z-index: 0; width: 3px; height: 3px; transform: translate3d(3px, 0, 0); }
-.tema-estrela.e6 { top: 36px; left: 28px; z-index: 0; width: 2px; height: 2px; transform: translate3d(3px, 0, 0); }
-/* estado marcado = noite */
-.tema-input:checked + .tema-trilho { background-color: #749dd6; }
-.tema-input:checked + .tema-trilho .tema-manopla { background-color: #ffe5b5; transform: translate3d(40px, 0, 0) rotate(0); }
-.tema-input:checked + .tema-trilho .tema-cratera { opacity: 1; }
-.tema-input:checked + .tema-trilho .e1 { width: 2px; height: 2px; }
-.tema-input:checked + .tema-trilho .e2 { width: 4px; height: 4px; transform: translate3d(-5px, 0, 0); }
-.tema-input:checked + .tema-trilho .e3 { width: 2px; height: 2px; transform: translate3d(-7px, 0, 0); }
-.tema-input:checked + .tema-trilho .e4, .tema-input:checked + .tema-trilho .e5, .tema-input:checked + .tema-trilho .e6 { opacity: 1; transform: translate3d(0, 0, 0); }
-.tema-input:checked + .tema-trilho .e4 { transition: all 300ms 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95); }
-.tema-input:checked + .tema-trilho .e5 { transition: all 300ms 300ms cubic-bezier(0.445, 0.05, 0.55, 0.95); }
-.tema-input:checked + .tema-trilho .e6 { transition: all 300ms 400ms cubic-bezier(0.445, 0.05, 0.55, 0.95); }
-/* Elos da arte do login: começam invisíveis e acendem em sequência, uma única vez. */
-/* Portal da tela de login: anéis giram bem devagar e o brilho "respira" (RF01) */
-.portal-gira {
-  transform-box: view-box;
-  transform-origin: 400px 450px; /* centro do portal no quadro 800 x 900 */
-  animation: portal-roda 100s linear infinite;
+/* a bolinha */
+.tema-slider::before {
+  position: absolute; content: "";
+  height: var(--tamanho-icone); width: var(--tamanho-icone);
+  border-radius: 20px;
+  left: var(--margem); top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(40deg, #ff0080, #ff8c00 70%); /* sol */
+  transition: 0.4s;
 }
-@keyframes portal-roda { to { transform: rotate(360deg); } }
-.portal-respira {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: portal-respira 7s ease-in-out infinite;
+.tema-switch input:checked + .tema-slider { background-color: #303136; }
+.tema-switch input:checked + .tema-slider::before {
+  left: calc(100% - (var(--tamanho-icone) + var(--margem)));
+  background: #303136;
+  /* a lua: duas sombras internas desenham a "foice" (mude os valores para mudar o ângulo) */
+  box-shadow: inset -3px -2px 5px -2px #8983f7, inset -10px -4px 0 0 #a3dafb;
 }
-@keyframes portal-respira { 50% { transform: scale(1.06); opacity: 0.85; } }
-/* Parallax da tela de login: a camada acompanha o mouse com uma transição suave */
-.parallax-camada { transition: transform 450ms cubic-bezier(0.2, 0.7, 0.2, 1); will-change: transform; }
-/* Estrelas de constelação que piscam bem devagar */
-.estrela-pisca { animation: estrela-pisca 7s ease-in-out infinite; }
-@keyframes estrela-pisca { 50% { opacity: 0.35; } }
-/* Pontinhos que andam na arte do login: deriva lenta + cintilação */
-.particula {
-  animation: particula-deriva var(--dur, 30s) ease-in-out infinite alternate,
-             particula-brilha calc(var(--dur, 30s) / 4) ease-in-out infinite alternate;
-}
-@keyframes particula-deriva { to { transform: translate(var(--dx, 30px), var(--dy, 30px)); } }
-@keyframes particula-brilha { from { opacity: 0.2; } to { opacity: 0.9; } }
-.elo-surgindo {
-  opacity: 0;
-  animation: elo-surgir 600ms ease-out both;
-}
-@keyframes elo-surgir {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .particula, .portal-gira, .portal-respira { animation: none !important; }
-  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-}
+.tema-switch input:focus-visible + .tema-slider { outline: 3px solid rgb(var(--c-violeta)); outline-offset: 3px; }
 
 /* A arte da tela de login é uma ilustração escura nos dois temas: aqui as variáveis voltam aos valores do escuro. */
 .tema-escuro-fixo {
