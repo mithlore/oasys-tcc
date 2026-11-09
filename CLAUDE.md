@@ -299,6 +299,8 @@ Todas responsivas (RNF04). Mostrar estados de carregamento, vazio e erro.
 5. **Elo, check-in e gráficos:** nada de benefício calculado no navegador ou em `localStorage` (RNF02). O protótipo mostra o elo de exemplo "Bronze, nível 19".
 6. **Bordas por elo:** forma e efeitos livres para ajuste; manter a ideia do app antigo (efeitos mais ricos nos elos altos).
 
+**Regra visual dos autores: NENHUM emoji no site.** Todos os ícones são **SVG próprios**, em componentes React em `src/components/icons/` (um arquivo por ícone ou um arquivo com todos), com traço simples e `currentColor` para herdar a cor do texto. Isso vale também para símbolos de texto como ★ e ✦ (o protótipo usa esses dois: trocar por ícones SVG na conversão). Os ícones de elo, raridade e arquétipo também são desenhados em SVG, sem emoji.
+
 **Regras para converter a home:**
 - Comentar em português conforme a Regra Nº 1; cada seção vira um componente pequeno.
 - Estados de carregamento, vazio e erro em todas as seções (RNF04 e seção 13).
@@ -352,7 +354,9 @@ oasys/
 ## 15-B. Estado atual do código (atualizar a cada etapa)
 
 - **Feito:** base Vite+React+TS+Tailwind com tema e rotas provisórias; `src/lib/{xp,elos,datas,afinidade}.ts` com testes (`npm test`); migrações `0001_init.sql`, `0002_permissoes.sql` e `0003_endurecer_funcoes.sql` em `supabase/migrations/` (16 tabelas, RLS em todas, GRANTs explícitos, funções `conceder_xp`, `gastar_giro`, `aceitar_troca`), **já aplicadas** no projeto Supabase `Oasys` (região us-east-1; "Automatically expose new tables" desligado e "automatic RLS" ligado). Restam 3 avisos do verificador do Supabase sobre `eh_admin`, `eh_equipe` e `papel_atual` (executáveis por usuário logado): são intencionais, as políticas RLS dependem delas e elas só devolvem o papel de quem chama. Há também um teste de segurança do banco (`npm run test:rls`, 35 verificações).
-- **Próximo:** Edge Functions `checkin`, `girar-roleta`, `aceitar-troca`, `conceder-xp`; depois login, home em React (a partir de `design/`), catálogo e o restante das telas; por fim o seed do catálogo (seção 9).
+- **Edge Functions publicadas** no Supabase (`supabase/functions/`): `checkin`, `girar-roleta` e `aceitar-troca`, com regras puras testadas em `_shared/regras.ts` (`npm test`) e a migração `0004_dar_colecionavel.sql` (entrega atômica de colecionável). Pesos da roleta (comum 60, rara 25, épica 10, lendária 5) herdados do app antigo: os autores podem ajustar em `PESO_POR_RARIDADE`. Ainda falta testar as funções de ponta a ponta com um usuário logado (depende do login).
+- **Pendente:** `conceder-xp` (XP por ações como avaliar e comentar): os valores ainda não foram definidos pelos autores.
+- **Próximo:** login, home em React (a partir de `design/`), catálogo e o restante das telas; por fim o seed do catálogo (seção 9).
 - **Antes de mexer no banco:** rodar `npm run test:rls`; ao criar tabela nova, ligar o RLS e acrescentar o caso ao teste.
 
 ---

@@ -10,5 +10,5 @@ const raiz = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   plugins: [react()],
   resolve: { alias: { "@": path.resolve(raiz, "src") } },
-  test: { environment: "node", include: ["src/**/*.test.ts"] },
+  test: { environment: "node", include: ["src/**/*.test.ts", "supabase/functions/**/*.test.ts"] },
 });

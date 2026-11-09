@@ -52,6 +52,13 @@ const dia='2026-11-09'; const giros=[];
 for (let i=0;i<4;i++){ giros.push((await as(null,'service_role',`select gastar_giro('${A}','${dia}') g`)).rows[0].g); }
 t('roleta: 3 giros e o 4º recusado (RN04)', giros.join()==='1,2,3,' || (giros[0]===1&&giros[1]===2&&giros[2]===3&&giros[3]===null));
 r = await as(A,'authenticated',`select gastar_giro('${A}','${dia}')`); t('usuário não chama gastar_giro', !r.ok);
+// entrega de colecionável: 1ª vez é nova, 2ª vira repetida (RN18); usuário comum não chama
+await db.exec(`insert into collectibles(id,title,rarity) values ('00000000-0000-0000-0000-0000000000c1','Arte teste','comum')`);
+const c1 = (await as(null,'service_role',`select dar_colecionavel('${A}','00000000-0000-0000-0000-0000000000c1') n`)).rows[0].n;
+const c2 = (await as(null,'service_role',`select dar_colecionavel('${A}','00000000-0000-0000-0000-0000000000c1') n`)).rows[0].n;
+const qtdColec = (await as(null,'service_role',`select quantity from user_collection where user_id='${A}' and collectible_id='00000000-0000-0000-0000-0000000000c1'`)).rows[0].quantity;
+t('dar_colecionavel: 1ª vez nova, 2ª repetida (quantidade 2)', c1===true && c2===false && Number(qtdColec)===2);
+r = await as(A,'authenticated',`select dar_colecionavel('${A}','00000000-0000-0000-0000-0000000000c1')`); t('usuário não chama dar_colecionavel (RNF02)', !r.ok);
 // usuário não escreve na coleção/check-in
 r = await as(A,'authenticated',`insert into daily_logs(user_id,day,week_start) values ('${A}','2026-11-09','2026-11-08')`); t('usuário não grava check-in direto (RNF02)', !r.ok);
 // amizade
