@@ -1,6 +1,6 @@
-// Botão que alterna entre modo escuro e modo claro: um interruptor onde a bolinha vira sol ou lua.
+// Botão que alterna entre modo escuro e modo claro: um interruptor simples com uma bolinha que desliza.
 // Usado no cabeçalho (Layout) e na tela de login. O desenho e a animação vêm do CSS em src/index.css (classes "tema-*"),
-// baseado no interruptor de satyamchaudharydev (Uiverse.io).
+// baseado no interruptor de Voxybuns (Uiverse.io).
 //
 // Acessibilidade: é um checkbox de verdade (funciona com teclado: Tab e Espaço) e tem rótulo para leitor de tela.
 // Marcado = noite = modo escuro.

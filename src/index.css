@@ -62,48 +62,65 @@ html.tema-trocando *:not(.tema-switch, .tema-switch *) { transition: none !impor
 }
 
 /* ====== Botão de modo claro/escuro (BotaoTema.tsx) ======
-   Interruptor de satyamchaudharydev (Uiverse.io), adaptado: usa as cores do tema, tem contorno para aparecer
-   no fundo claro e funciona com o teclado. Desmarcado = dia (bolinha rosa/laranja, modo claro).
-   Marcado = noite (bolinha vira uma lua). A bolinha desliza e muda de forma com transição de 0,4 s. */
+   Interruptor de Voxybuns (Uiverse.io), adaptado: as cores vêm do tema (contorno, trilho e bolinha mudam
+   junto com o modo claro/escuro). Desmarcado = modo claro (bolinha à esquerda). Marcado = modo escuro
+   (bolinha à direita, trilho violeta). A bolinha "levanta" um pouco quando o mouse passa por cima. */
 .tema-switch {
-  display: block;
-  font-size: 16px; /* as medidas em "em" partem deste tamanho */
-  --largura: 3.5em;
-  --altura: 2em;
-  --tamanho-icone: 1.4em; /* tamanho da bolinha (sol e lua) */
-  --margem: 0.3em;        /* "respiro" entre a bolinha e a borda */
+  /* variáveis do botão */
+  --switch_width: 2em;
+  --switch_height: 1em;
+  --thumb_color: rgb(var(--c-painel));       /* bolinha */
+  --track_color: rgb(var(--c-fundo));        /* trilho desligado */
+  --track_active_color: rgb(var(--c-violeta)); /* trilho ligado */
+  --outline_color: rgb(var(--c-tinta) / 0.85); /* contorno e sombra */
+  font-size: 20px; /* as medidas em "em" partem deste tamanho */
   position: relative;
-  width: var(--largura);
-  height: var(--altura);
+  display: inline-block;
   flex: none;
+  width: var(--switch_width);
+  height: var(--switch_height);
+  /* dá ao botão uma "camada" própria na troca de tema: ele não é coberto pela pintura da tela (veja abaixo) */
+  view-transition-name: tema-botao;
 }
 /* o checkbox fica invisível, mas continua focável pelo teclado */
 .tema-switch input { opacity: 0; width: 0; height: 0; }
 .tema-slider {
-  position: absolute; inset: 0; cursor: pointer;
-  background-color: #f4f4f5;
-  box-shadow: inset 0 0 0 1px rgb(var(--c-tinta) / 0.18); /* contorno fino: sem ele o botão some no fundo claro */
-  transition: 0.4s;
-  border-radius: 30px;
+  box-sizing: border-box;
+  border: 2px solid var(--outline_color);
+  position: absolute; cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--track_color);
+  transition: 0.15s;
+  border-radius: var(--switch_height);
 }
 /* a bolinha */
 .tema-slider::before {
+  box-sizing: border-box;
   position: absolute; content: "";
-  height: var(--tamanho-icone); width: var(--tamanho-icone);
-  border-radius: 20px;
-  left: var(--margem); top: 50%;
-  transform: translateY(-50%);
-  background: linear-gradient(40deg, #ff0080, #ff8c00 70%); /* sol */
-  transition: 0.4s;
+  height: var(--switch_height); width: var(--switch_height);
+  border: 2px solid var(--outline_color);
+  border-radius: 100%;
+  left: -2px; bottom: -2px;
+  background-color: var(--thumb_color);
+  transform: translateY(-0.2em);
+  box-shadow: 0 0.2em 0 var(--outline_color);
+  transition: 0.15s;
 }
-.tema-switch input:checked + .tema-slider { background-color: #303136; }
-.tema-switch input:checked + .tema-slider::before {
-  left: calc(100% - (var(--tamanho-icone) + var(--margem)));
-  background: #303136;
-  /* a lua: duas sombras internas desenham a "foice" (mude os valores para mudar o ângulo) */
-  box-shadow: inset -3px -2px 5px -2px #8983f7, inset -10px -4px 0 0 #a3dafb;
+.tema-switch input:checked + .tema-slider { background-color: var(--track_active_color); }
+.tema-switch input:focus-visible + .tema-slider { box-shadow: 0 0 0 2px var(--track_active_color); }
+/* levanta a bolinha ao passar o mouse */
+.tema-switch input:hover + .tema-slider::before { transform: translateY(-0.3em); box-shadow: 0 0.3em 0 var(--outline_color); }
+/* ligado: a bolinha vai para a direita */
+.tema-switch input:checked + .tema-slider::before { transform: translateX(calc(var(--switch_width) - var(--switch_height))) translateY(-0.2em); }
+.tema-switch input:hover:checked + .tema-slider::before {
+  transform: translateX(calc(var(--switch_width) - var(--switch_height))) translateY(-0.3em);
+  box-shadow: 0 0.3em 0 var(--outline_color);
 }
-.tema-switch input:focus-visible + .tema-slider { outline: 3px solid rgb(var(--c-violeta)); outline-offset: 3px; }
+
+/* Na troca de tema o botão aparece "ao vivo" por cima de tudo: sem foto antiga, sem máscara da pintura */
+::view-transition-group(tema-botao) { animation: none; }
+::view-transition-old(tema-botao) { display: none; }
+::view-transition-new(tema-botao) { animation: none; mask-image: none; -webkit-mask-image: none; }
 
 /* A arte da tela de login é uma ilustração escura nos dois temas: aqui as variáveis voltam aos valores do escuro. */
 .tema-escuro-fixo {
