@@ -1,0 +1,9 @@
+node_modules
+dist
+.env
+.env.local
+# Export antigo do Base44 contém e-mails de usuários: nunca versionar (ver CLAUDE.md, seção 9).
+data/
+*.log
+.DS_Store
+*.tsbuildinfo

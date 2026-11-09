@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tema base do OASYS (cores e fontes vêm do protótipo da home). */
+body {
+  @apply bg-fundo font-texto text-white antialiased;
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
