@@ -46,12 +46,10 @@ export function useTema() {
     const semAnimacao = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (typeof document.startViewTransition === "function" && !semAnimacao) {
       // "tema-trocando" desliga as transições comuns durante o efeito, para a foto "depois" já sair com as cores finais
-      // Espera 350 ms antes de pintar a tela: assim dá tempo de ver a bolinha do botão deslizar (0,4 s) primeiro
-      window.setTimeout(() => {
-        html.classList.add("tema-trocando");
-        const transicao = document.startViewTransition(aplicar);
-        void transicao.finished.finally(() => html.classList.remove("tema-trocando"));
-      }, 350);
+      // Começa na hora: a bolinha do botão desliza e a tela é pintada ao mesmo tempo, sem espera
+      html.classList.add("tema-trocando");
+      const transicao = document.startViewTransition(aplicar);
+      void transicao.finished.finally(() => html.classList.remove("tema-trocando"));
     } else {
       aplicar();
     }
