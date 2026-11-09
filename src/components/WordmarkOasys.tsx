@@ -1,10 +1,12 @@
 // Escrita própria do nome "OASYS", desenhada em SVG (traços), sem depender de fonte.
 // Usada no cabeçalho (Layout) e na tela de login. Identidade visual do projeto (não é um requisito RF/RN).
 //
-// Cada letra é um "traço" com ponta arredondada, e tem um detalhe que a deixa única:
-//   O = anel aberto com um tracinho solto; A = sem travessa (ela vira um traço solto);
-//   S = cortada na diagonal, no meio; Y = com um pequeno vão na haste.
-// O corte do S é feito com uma "máscara" (parte que fica transparente), então funciona em qualquer fundo.
+// Todas as letras seguem a mesma grade: linha central entre y=14 e y=50, traço de 6, pontas arredondadas,
+// e 10 unidades de espaço entre elas. Cada letra tem um detalhe que a deixa única:
+//   O = anel aberto embaixo com um ponto no centro (um "oásis"); A = a travessa vira um traço solto;
+//   S = cortado na diagonal, no meio; Y = a haste tem um pequeno vão.
+// Os cortes são feitos com "máscaras" (a parte preta da máscara fica transparente), então valem em qualquer fundo.
+// As cores do degradê vêm das variáveis do tema (index.css), por isso acompanham o modo claro/escuro.
 
 import { useId } from "react";
 
@@ -13,19 +15,29 @@ type Props = {
   className?: string;
 };
 
-export default function WordmarkOasys({ altura = 24, className }: Props) {
-  // ids únicos, para o degradê e as máscaras não colidirem se o componente aparecer 2 vezes na tela
-  const id = useId().replace(/:/g, "");
-  const corte1 = `${id}c1`;
-  const corte2 = `${id}c2`;
-  const grad = `${id}g`;
+// Caminho do S, desenhado a partir de x0 (posição do lado esquerdo da letra). Usado nas duas letras S.
+const caminhoS = (x0: number) =>
+  `M${x0 + 28} 22 C${x0 + 26} 11 ${x0 + 2} 11 ${x0 + 2} 23 C${x0 + 2} 34 ${x0 + 30} 28 ${x0 + 30} 41 C${x0 + 30} 53 ${x0 + 6} 53 ${x0} 44`;
 
-  // O mesmo desenho do S, usado duas vezes (só muda a posição horizontal)
-  const desenhoS = "M168 17 C162 8 138 9 138 21 C138 33 170 28 170 42 C170 54 146 54 138 46";
+export default function WordmarkOasys({ altura = 24, className }: Props) {
+  // ids únicos, para o degradê e as máscaras não colidirem se o componente aparecer mais de uma vez na tela
+  const id = useId().replace(/:/g, "");
+  const grad = `${id}g`;
+  const corteS1 = `${id}s1`;
+  const corteS2 = `${id}s2`;
+  const corteY = `${id}y`;
+
+  // Uma máscara = um retângulo branco (tudo visível) + uma risca preta (o corte)
+  const mascara = (mid: string, risca: string, espessura: number) => (
+    <mask id={mid} maskUnits="userSpaceOnUse" x="0" y="0" width="260" height="64">
+      <rect width="260" height="64" fill="#fff" />
+      <path d={risca} stroke="#000" strokeWidth={espessura} />
+    </mask>
+  );
 
   return (
     <svg
-      viewBox="0 0 320 64"
+      viewBox="0 0 248 64"
       height={altura}
       className={className}
       fill="none"
@@ -37,43 +49,38 @@ export default function WordmarkOasys({ altura = 24, className }: Props) {
       aria-label="OASYS"
     >
       <defs>
-        {/* degradê lavanda → violeta, na largura toda (userSpaceOnUse faz as letras dividirem o mesmo degradê) */}
-        <linearGradient id={grad} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="320" y2="0">
+        {/* degradê na largura toda (userSpaceOnUse faz as letras dividirem o mesmo degradê) */}
+        <linearGradient id={grad} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="248" y2="0">
           <stop offset="0" style={{ stopColor: "rgb(var(--c-marca-a))" }} />
           <stop offset="1" style={{ stopColor: "rgb(var(--c-marca-b))" }} />
         </linearGradient>
-        {/* máscaras: tudo branco aparece; a risca preta é o "corte" diagonal no meio de cada S */}
-        <mask id={corte1} maskUnits="userSpaceOnUse" x="0" y="0" width="320" height="64">
-          <rect width="320" height="64" fill="#fff" />
-          <path d="M136 36 L172 27" stroke="#000" strokeWidth={4.5} />
-        </mask>
-        <mask id={corte2} maskUnits="userSpaceOnUse" x="0" y="0" width="320" height="64">
-          <rect width="320" height="64" fill="#fff" />
-          <path d="M252 36 L288 27" stroke="#000" strokeWidth={4.5} />
-        </mask>
+        {mascara(corteS1, "M108 36 L144 28", 4.5)}
+        {mascara(corteS2, "M204 36 L240 28", 4.5)}
+        {mascara(corteY, "M166 42 L182 42", 3.5)}
       </defs>
 
-      {/* O: anel aberto + tracinho solto no vão */}
-      <path d="M44 26 A19 19 0 1 1 36 13" />
-      <path d="M43 11 L51 7" strokeWidth={4} />
+      {/* O: anel aberto embaixo + ponto no centro */}
+      <path d="M17.5 48.3 A17 18 0 1 1 30.5 48.3" />
+      <circle cx="24" cy="32" r="3.2" fill={`url(#${grad})`} stroke="none" />
 
-      {/* A: dois traços inclinados; a travessa é um traço curto solto */}
-      <path d="M70 54 L92 10 L114 54" />
-      <path d="M84 41 L100 41" strokeWidth={4} />
+      {/* A: dois traços inclinados; a travessa é um traço curto e mais fino, solto */}
+      <path d="M57 50 L76 14 L95 50" />
+      <path d="M68.5 40 L83.5 40" strokeWidth={4} />
 
       {/* S (primeiro), com corte diagonal */}
-      <g mask={`url(#${corte1})`}>
-        <path d={desenhoS} />
+      <g mask={`url(#${corteS1})`}>
+        <path d={caminhoS(111)} />
       </g>
 
-      {/* Y: braços + haste com um pequeno vão */}
-      <path d="M184 10 L203 33 L222 10" />
-      <path d="M203 33 L203 41" />
-      <path d="M203 47 L203 54" />
+      {/* Y: braços + haste com um pequeno vão no meio da haste */}
+      <g mask={`url(#${corteY})`}>
+        <path d="M157 14 L174 33 L191 14" />
+        <path d="M174 33 L174 50" />
+      </g>
 
-      {/* S (segundo), com corte diagonal; deslocado 116 unidades para a direita */}
-      <g mask={`url(#${corte2})`}>
-        <path d={desenhoS} transform="translate(116 0)" />
+      {/* S (segundo), com corte diagonal */}
+      <g mask={`url(#${corteS2})`}>
+        <path d={caminhoS(207)} />
       </g>
     </svg>
   );

@@ -36,7 +36,29 @@
 /* Tema base do OASYS (cores e fontes vêm do protótipo da home). */
 body {
   @apply bg-fundo font-texto text-tinta antialiased;
-  transition: background-color 300ms ease, color 300ms ease; /* troca suave entre os temas */
+}
+
+/* ====== Troca de tema "pintando" de cima para baixo ======
+   Durante a troca o navegador mantém duas fotos da tela: a antiga (embaixo) e a nova (em cima).
+   A foto nova aparece por uma máscara em degradê que desce, então a cor nova vai "pintando" a página,
+   com a borda suave, da parte de cima até a de baixo. */
+html.tema-trocando * { transition: none !important; }
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) {
+  z-index: 2;
+  /* máscara 2,5x mais alta que a tela: preto (aparece) em cima, transparente (some) embaixo, com faixa suave no meio */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 60%, transparent 100%);
+  -webkit-mask-size: 100% 250%;
+  mask-size: 100% 250%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: tema-pintar 1000ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes tema-pintar {
+  from { -webkit-mask-position: 0 100%; mask-position: 0 100%; } /* tudo transparente: só se vê a foto antiga */
+  to { -webkit-mask-position: 0 0; mask-position: 0 0; }         /* tudo preto: só se vê a foto nova */
 }
 
 /* ====== Botão de modo claro/escuro (BotaoTema.tsx) ======

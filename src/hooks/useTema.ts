@@ -26,15 +26,31 @@ export function useTema() {
     return () => window.removeEventListener("oasys-tema", aoMudar);
   }, []);
 
-  // Aplica o tema na tag <html> e lembra a escolha
+  // Aplica o tema na tag <html> e lembra a escolha.
+  // A troca é "pintada" de cima para baixo: usa a View Transitions API do navegador, que tira uma foto da tela
+  // antes e depois da troca; o efeito em si (a máscara que desce) está em index.css ("tema-pintar").
+  // Navegador sem suporte, ou usuário com "reduzir movimento": troca direto, sem animação.
   const definir = useCallback((novo: Tema) => {
-    document.documentElement.classList.toggle("claro", novo === "claro");
-    try {
-      localStorage.setItem(CHAVE, novo); // pode falhar em aba anônima: tudo bem, só não lembra
-    } catch {
-      /* sem armazenamento: o tema vale só nesta visita */
+    const html = document.documentElement;
+    // Troca a classe, lembra a escolha e avisa os botões. Com a animação, isto roda no meio da transição.
+    const aplicar = () => {
+      html.classList.toggle("claro", novo === "claro");
+      try {
+        localStorage.setItem(CHAVE, novo); // pode falhar em aba anônima: tudo bem, só não lembra
+      } catch {
+        /* sem armazenamento: o tema vale só nesta visita */
+      }
+      window.dispatchEvent(new Event("oasys-tema"));
+    };
+    const semAnimacao = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (typeof document.startViewTransition === "function" && !semAnimacao) {
+      // "tema-trocando" desliga as transições comuns durante o efeito, para a foto "depois" já sair com as cores finais
+      html.classList.add("tema-trocando");
+      const transicao = document.startViewTransition(aplicar);
+      void transicao.finished.finally(() => html.classList.remove("tema-trocando"));
+    } else {
+      aplicar();
     }
-    window.dispatchEvent(new Event("oasys-tema"));
   }, []);
 
   const alternar = useCallback(() => definir(temaAtual() === "claro" ? "escuro" : "claro"), [definir]);

@@ -33,7 +33,7 @@ export default function Layout() {
           {/* Logo + nome no canto esquerdo do cabeçalho */}
           <span className="flex items-center gap-3">
             <LogoOasys tamanho={30} />
-            <WordmarkOasys altura={22} />
+            <WordmarkOasys altura={26} />
           </span>
           <ul className="flex flex-wrap gap-1">
             {LINKS.map((l) => (

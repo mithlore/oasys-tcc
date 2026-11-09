@@ -93,7 +93,7 @@ export default function Login() {
         <div className="mb-8 flex flex-col items-center gap-3">
           {/* No computador a logo grande já está na arte ao lado; aqui ela só aparece no celular */}
           <LogoOasys tamanho={72} className="lg:hidden" />
-          <WordmarkOasys altura={34} className="mx-auto" />
+          <WordmarkOasys altura={40} className="mx-auto" />
         </div>
 
         <div className="rounded-2xl border border-linha bg-painel p-6 sm:p-8">
