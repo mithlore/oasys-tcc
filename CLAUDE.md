@@ -267,7 +267,7 @@ Todas responsivas (RNF04). Mostrar estados de carregamento, vazio e erro.
 
 **A home já está desenhada.** O arquivo `design/oasys-home-prototipo.html` é a **referência visual oficial**. Ele é HTML estático com dados de exemplo. Convertê-lo para React (`src/pages/Home.tsx` + componentes em `src/components/home/`), mantendo layout, cores, fontes e animações, e trocando os dados fictícios por consultas ao Supabase.
 
-**Visual (manter):** fundo `#0c0e14`, violeta `#a78bfa` / `#6d28d9`, azul `#3b82f6`, dourado `#fde047` (raridade lendária). Fontes: Outfit (títulos), DM Sans (texto), Instrument Serif itálico (destaques), carregadas pelo Google Fonts. As variáveis CSS do `:root` do protótipo viram o tema do Tailwind.
+**Visual (manter):** fundo `#0c0e14`, violeta `#a78bfa` / `#6d28d9`, azul `#3b82f6`, dourado `#fde047` (raridade lendária). Fontes: Outfit (títulos), DM Sans (texto), uma só família de títulos (Outfit); sem fonte serifada de destaque, carregadas pelo Google Fonts. As variáveis CSS do `:root` do protótipo viram o tema do Tailwind.
 
 **Seções (de cima para baixo) e de onde vem cada dado:**
 

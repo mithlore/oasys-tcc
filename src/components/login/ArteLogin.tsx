@@ -177,7 +177,7 @@ export default function ArteLogin() {
       {/* Frase de apresentação */}
       <div className="absolute inset-x-10 bottom-10">
         <p className="font-titulo text-4xl font-bold leading-tight">
-          Descubra seu <span className="font-destaque text-[1.1em] italic text-violeta">próximo</span> jogo.
+          Descubra seu <span className="text-violeta">próximo</span> jogo.
         </p>
         <p className="mt-3 max-w-md text-sm text-white/65">
           Catálogo, comunidade e conquistas em um só lugar. Do Ferro à Lenda Absoluta.

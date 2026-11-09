@@ -17,7 +17,7 @@ export default function ProgressaoElos() {
       <div>
         <span className="font-titulo text-xs font-semibold uppercase tracking-[0.2em] text-violeta">Progressão</span>
         <h2 id="titulo-elos" className="mt-2 font-titulo text-3xl font-bold tracking-tight sm:text-4xl">
-          Do Ferro à <em className="font-destaque text-[1.1em] font-normal italic text-violeta">Lenda Absoluta.</em>
+          Do Ferro à <span className="text-violeta">Lenda Absoluta.</span>
         </h2>
         {/* Texto de apoio com estados de carregamento e de erro */}
         {perfil.isLoading && <div className="mt-3 h-5 w-72 animate-pulse rounded bg-white/10" aria-busy="true" />}

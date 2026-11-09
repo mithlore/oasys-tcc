@@ -21,7 +21,6 @@ export default {
       fontFamily: {
         titulo: ["Outfit", "sans-serif"],
         texto: ["DM Sans", "sans-serif"],
-        destaque: ["Instrument Serif", "serif"],
       },
     },
   },

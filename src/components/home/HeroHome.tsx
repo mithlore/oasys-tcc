@@ -40,7 +40,7 @@ export default function HeroHome() {
           </span>
 
           <h1 id="titulo-hero" className="font-titulo text-5xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl">
-            Descubra seu <em className="font-destaque text-[1.1em] font-normal italic text-violeta">próximo</em> jogo.
+            Descubra seu <span className="text-violeta">próximo</span> jogo.
           </h1>
 
           <p className="max-w-md text-white/65">
