@@ -7,6 +7,19 @@ body {
   @apply bg-fundo font-texto text-white antialiased;
 }
 /* Elos da arte do login: começam invisíveis e acendem em sequência, uma única vez. */
+/* Portal da tela de login: anéis giram bem devagar e o brilho "respira" (RF01) */
+.portal-gira {
+  transform-box: view-box;
+  transform-origin: 400px 450px; /* centro do portal no quadro 800 x 900 */
+  animation: portal-roda 100s linear infinite;
+}
+@keyframes portal-roda { to { transform: rotate(360deg); } }
+.portal-respira {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: portal-respira 7s ease-in-out infinite;
+}
+@keyframes portal-respira { 50% { transform: scale(1.06); opacity: 0.85; } }
 .elo-surgindo {
   opacity: 0;
   animation: elo-surgir 600ms ease-out both;

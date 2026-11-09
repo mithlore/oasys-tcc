@@ -87,7 +87,8 @@ export default function Login() {
       <div className="w-full max-w-md animate-entrar">
         {/* Logo oficial e nome, centralizados acima do formulário */}
         <div className="mb-8 flex flex-col items-center gap-3">
-          <LogoOasys tamanho={72} />
+          {/* No computador a logo grande já está na arte ao lado; aqui ela só aparece no celular */}
+          <LogoOasys tamanho={72} className="lg:hidden" />
           <p className="font-titulo text-3xl font-bold tracking-[0.35em]">OASYS</p>
         </div>
 
