@@ -128,7 +128,7 @@ O papel fica em `profiles.role` (`'usuario' | 'suporte' | 'admin'`). **Só o adm
 | RN17 | Empate de afinidade → ordem alfabética do título |
 | RN18 | Troca: só entre colecionáveis repetidos (quantidade ≥ 2), só com aceite do destinatário e executada de forma atômica no servidor (função `aceitar-troca`) |
 | RN19 | Troca sem valor monetário; cada usuário só propõe itens que possui |
-| RN20 | Nível = maior N tal que 5·N·(N−1) ≤ XP (máx. 100, com 49.500 XP). Elo = `floor((nível − 1) / 10)`, em 10 elos de 10 níveis |
+| RN20 | Nível = maior N tal que N·(N−1) ≤ XP (máx. 100, com 9.900 XP; o XP total continua somando para o ranking). Elo = `floor((nível − 1) / 10)`, em 10 elos de 10 níveis |
 | RN21 | Elo e borda do avatar são calculados a partir do nível (no servidor/em `src/lib/elos.ts`), nunca gravados pelo cliente |
 
 ## 7. Requisitos não funcionais (RNF): critérios de aceite
@@ -172,7 +172,7 @@ Os nomes no TCC são conceituais. Abaixo está a sugestão em `snake_case`. **To
 `update roulette_days set spins_used = spins_used + 1 where user_id = $1 and spin_day = $2 and spins_used < 3 returning spins_used;` (já implementado na função SQL `gastar_giro`)
 Se não retornar linha, o limite foi atingido e o giro é recusado. Essa é a "operação condicional" citada no TCC (seção 4.5.3).
 
-**Fórmula de nível e elos (definidas):** o nível N começa em `5·N·(N−1)` XP (máx. nível 100 = 49.500 XP); elo = `floor((nível − 1) / 10)` (RN20). Check-in: +15 XP, +100 XP no 7º check-in da semana (domingo a sábado). **Os demais valores de XP** (avaliar, comentar, etc.) ainda não estão definidos: perguntar aos autores e deixar tudo em um único lugar (constante ou tabela de configuração), comentado.
+**Fórmula de nível e elos (definidas):** o nível N começa em `N·(N−1)` XP (máx. nível 100 = 9.900 XP; só check-in todo dia chega lá em cerca de 11 meses); elo = `floor((nível − 1) / 10)` (RN20). Check-in: +15 XP, +100 XP no 7º check-in da semana (domingo a sábado). **Os demais valores de XP** (avaliar, comentar, etc.) ainda não estão definidos: perguntar aos autores e deixar tudo em um único lugar (constante ou tabela de configuração), comentado.
 
 ---
 
@@ -226,7 +226,22 @@ Atributos usados: **A = {play_style, pace, difficulty, world_type}**.
 - Cada pergunta do "Me Descobrir" tem **exatamente uma opção por arquétipo**; cada resposta soma +1 (RN13). Os eixos de motivação aparecem só como "traços" na tela de resultado, sem mudar a atribuição. É um elemento **lúdico**, não um diagnóstico.
 - **Check-in** (RF16/RN03): Edge Function; um por dia no fuso de Brasília; concede +15 XP; no 7º check-in da semana (domingo a sábado), +100 XP e uma arte rara ou épica sorteada entre as que o usuário ainda não tem; ao completar todos os dias do mês, uma arte lendária (também sorteada entre as que ele não tem). O app antigo usava semana ISO (segunda a domingo); **aqui a semana começa no domingo**. A semana é calculada pela data de domingo (`week_start`), **sem usar a semana ISO** (que começa na segunda).
 - **Roleta / Santuário** (RF17/RN04/RN14): Edge Function; 3 giros por dia, reinício às 21h (Brasília); sorteio ponderado por raridade **no servidor**; grava em `user_collection`. Giro gratuito, sem dinheiro, item sem valor monetário.
-- **XP** (RF15/RN02): sempre por Edge Function, registrando em `xp_events`.
+- **XP** (RF15/RN02): sempre por Edge Function, registrando em `xp_events`. **Tabela de XP por ação (proposta aprovada pelos autores em 09/11/2026; os valores ficam em um único lugar no código):**
+
+| Ação | XP | Regra |
+|---|---|---|
+| Avaliar um jogo | 10 | 1 vez por jogo |
+| Favoritar um jogo | 5 | 1 vez por jogo |
+| Abrir a página de um jogo | 1 | 1 vez por jogo |
+| Publicar no feed | 5 | até 3 por dia |
+| Comentar | 2 | até 5 por dia |
+| Amizade aceita | 2 | até 5 por dia |
+| Troca concluída | 5 | até 3 por dia |
+| Questionário "Me Descobrir" | 20 | 1 vez |
+| Check-in diário | 15 | 1 por dia |
+| 7 check-ins na semana | 100 | 1 por semana |
+
+  Metas de ritmo (para calibrar): só check-in todo dia chega ao nível 100 em cerca de 11 meses; ritmo normal, 6 a 8 meses; tudo no máximo todo dia, 3 a 4 meses. Ações "1 vez por jogo" são controladas pelo jogo (não pelo registro criado), para não dar pra apagar e refazer e ganhar de novo.
 
 ---
 
@@ -284,7 +299,7 @@ Todas responsivas (RNF04). Mostrar estados de carregamento, vazio e erro.
 | 31–40 | Ouro | 81–90 | Grão-Mestre |
 | 41–50 | Platina | 91–100 | Lenda Absoluta |
 
-   Nível pelo XP: o nível N começa em `5·N·(N−1)` XP (nível 100 = 49.500 XP). A borda do avatar muda de forma e de efeitos visuais conforme o nível (RN21); o TCC não fixa o desenho de cada borda, para permitir ajustes. Referência dos efeitos do app antigo: `src/components/profile/AvatarWithBorder.jsx` e `src/lib/xp.js` no repositório `mithlore/Oasys`. Implementar em `src/lib/elos.ts` (funções puras, com teste).
+   Nível pelo XP: o nível N começa em `N·(N−1)` XP (nível 100 = 9.900 XP). A borda do avatar muda de forma e de efeitos visuais conforme o nível (RN21); o TCC não fixa o desenho de cada borda, para permitir ajustes. Referência dos efeitos do app antigo: `src/components/profile/AvatarWithBorder.jsx` e `src/lib/xp.js` no repositório `mithlore/Oasys`. Implementar em `src/lib/elos.ts` (funções puras, com teste).
 2. **Bônus de check-in:** +15 XP por check-in; **7 check-ins na mesma semana (domingo a sábado) = +100 XP + arte rara/épica**; **mês completo = arte lendária** (RN03). Só pela Edge Function `checkin`. Referência da lógica antiga: `base44/functions/dailyCheckin/entry.ts` no repositório `mithlore/Oasys`.
 3. **Roleta:** 3 giros por dia, reinício às **21h (Brasília)** (RN04).
 4. **Mercado de Trocas / trocar repetidas:** faz parte do escopo (RF22, RN18, RN19, tabela `trades`, função `aceitar-troca`). Implementar.
@@ -355,7 +370,8 @@ oasys/
 
 - **Feito:** base Vite+React+TS+Tailwind com tema e rotas provisórias; `src/lib/{xp,elos,datas,afinidade}.ts` com testes (`npm test`); migrações `0001_init.sql`, `0002_permissoes.sql` e `0003_endurecer_funcoes.sql` em `supabase/migrations/` (16 tabelas, RLS em todas, GRANTs explícitos, funções `conceder_xp`, `gastar_giro`, `aceitar_troca`), **já aplicadas** no projeto Supabase `Oasys` (região us-east-1; "Automatically expose new tables" desligado e "automatic RLS" ligado). Restam 3 avisos do verificador do Supabase sobre `eh_admin`, `eh_equipe` e `papel_atual` (executáveis por usuário logado): são intencionais, as políticas RLS dependem delas e elas só devolvem o papel de quem chama. Há também um teste de segurança do banco (`npm run test:rls`, 35 verificações).
 - **Edge Functions publicadas** no Supabase (`supabase/functions/`): `checkin`, `girar-roleta` e `aceitar-troca`, com regras puras testadas em `_shared/regras.ts` (`npm test`) e a migração `0004_dar_colecionavel.sql` (entrega atômica de colecionável). Pesos da roleta (comum 60, rara 25, épica 10, lendária 5) herdados do app antigo: os autores podem ajustar em `PESO_POR_RARIDADE`. Ainda falta testar as funções de ponta a ponta com um usuário logado (depende do login).
-- **Pendente:** `conceder-xp` (XP por ações como avaliar e comentar): os valores ainda não foram definidos pelos autores.
+- **Fórmula de nível nova (migração `0005_nova_formula_de_nivel.sql`, já aplicada):** N·(N−1), teto de 9.900 XP.
+- **Pendente:** `conceder-xp` (XP por ações como avaliar e comentar), a implementar com a tabela de XP da seção 12.
 - **Próximo:** login, home em React (a partir de `design/`), catálogo e o restante das telas; por fim o seed do catálogo (seção 9).
 - **Antes de mexer no banco:** rodar `npm run test:rls`; ao criar tabela nova, ligar o RLS e acrescentar o caso ao teste.
 
@@ -386,6 +402,6 @@ oasys/
 - Fazer **uma etapa por vez** e explicar antes de mudanças grandes.
 - Código **simples e legível**, sem abstrações desnecessárias. Nomes descritivos (podem ser em português).
 - Sempre indicar **quais RF/RN/RNF** cada mudança atende.
-- Se algo não estiver definido aqui (ex.: valores de XP), **perguntar** em vez de inventar.
+- Se algo não estiver definido aqui (ex.: ainda indefinido), **perguntar** em vez de inventar.
 - Sugerir mensagem de commit em português ao final de cada etapa.
 - Quando os autores pedirem "explica esse arquivo", explicar **linha a linha** em linguagem simples.

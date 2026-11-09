@@ -39,11 +39,11 @@ r = await as(A,'authenticated',`update profiles set bio='oi' where id='${A}'`); 
 r = await as(A,'authenticated',`update profiles set bio='hack' where id='${B}' returning id`); t('usuário não edita perfil de outro', r.ok && r.rows.length===0);
 // conceder_xp: só service_role
 r = await as(A,'authenticated',`select conceder_xp('${A}','teste',100)`); t('usuário não chama conceder_xp (RN02)', !r.ok);
-r = await as(null,'service_role',`select (conceder_xp('${A}','teste',35001)).level lvl`); t('service_role concede XP e calcula nível 84', r.ok && r.rows[0].lvl===84);
-r = await as(null,'service_role',`select (conceder_xp('${B}','teste',49500)).level lvl`); t('49.500 XP = nível 100', r.ok && r.rows[0].lvl===100);
+r = await as(null,'service_role',`select (conceder_xp('${A}','teste',7832)).level lvl`); t('service_role concede XP e calcula nível 89', r.ok && r.rows[0].lvl===89);
+r = await as(null,'service_role',`select (conceder_xp('${B}','teste',9900)).level lvl`); t('9.900 XP = nível 100', r.ok && r.rows[0].lvl===100);
 r = await as(null,'service_role',`select (conceder_xp('${B}','teste',999999)).level lvl`); t('nível limitado a 100', r.ok && r.rows[0].lvl===100);
 // confere fórmula SQL x TS em vários pontos
-let ok=true; for (const [xp,lv] of [[0,1],[9,1],[10,2],[29,2],[30,3],[34859,83],[34860,84],[35699,84],[35700,85]]) {
+let ok=true; for (const [xp,lv] of [[0,1],[1,1],[2,2],[5,2],[6,3],[7831,88],[7832,89],[8009,89],[8010,90],[9899,99],[9900,100]]) {
   await db.exec(`update profiles set xp=0, level=1 where id='${C}'`);
   const x = (await db.query(`select (conceder_xp('${C}','t',${xp})).level l`)).rows[0].l; if (x!==lv){ok=false;console.log('xp',xp,'esperado',lv,'obtido',x);} }
 t('fórmula de nível em SQL nos limites', ok);

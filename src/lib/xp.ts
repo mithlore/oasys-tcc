@@ -12,12 +12,13 @@ export const XP_CHECKIN = 15;
 export const XP_BONUS_SEMANA = 100;
 
 /**
- * XP acumulado em que o nível N começa: 5 · N · (N − 1) (RN20).
- * Ex.: nível 2 começa em 10 XP; nível 100 em 49.500 XP.
+ * XP acumulado em que o nível N começa: N · (N − 1) (RN20).
+ * Ex.: nível 2 começa em 2 XP; nível 100 em 9.900 XP (o teto). Quem faz só o check-in
+ * todo dia (15 XP + 100 XP por semana completa) chega lá em cerca de 11 meses.
  */
 export function xpDoNivel(nivel: number): number {
   if (nivel <= 1) return 0;
-  return 5 * nivel * (nivel - 1);
+  return nivel * (nivel - 1);
 }
 
 /** Maior nível N (de 1 a 100) tal que xpDoNivel(N) <= xp. */
