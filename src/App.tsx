@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Layout from "@/components/Layout";
 import Pagina from "@/pages/Pagina";
 import Login from "@/pages/Login";
+import Home from "@/pages/Home";
 import RotaProtegida from "@/components/RotaProtegida";
 import { supabaseConfigurado } from "@/lib/supabase";
 
@@ -20,7 +21,7 @@ export default function App() {
         {/* Todo o resto exige login: RotaProtegida leva visitantes para /login */}
         <Route element={<RotaProtegida />}>
           <Route element={<Layout />}>
-            <Route index element={<Pagina titulo="Início" requisitos="RF15, RF16, RF23, RF24 (home: design/oasys-home-prototipo.html)" />} />
+            <Route index element={<Home />} />
             <Route path="catalogo" element={<Pagina titulo="Catálogo" requisitos="RF02" />} />
             <Route path="jogo/:id" element={<Pagina titulo="Página do jogo" requisitos="RF03, RF04, RF05" />} />
             <Route path="santuario" element={<Pagina titulo="Santuário" requisitos="RF17, RF22" />} />
