@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 // Teste de segurança do banco (RNF01, RNF02): aplica a migração num Postgres local (PGlite) e tenta
 // "atacar" cada regra como se fosse um usuário comum. Rodar com: npm run test:rls
-const migracao = fileURLToPath(new URL('../migrations/0001_init.sql', import.meta.url));
+const pasta = fileURLToPath(new URL('../migrations/', import.meta.url));
 const db = new PGlite();
 // Stubs do Supabase: schema auth, papéis e auth.uid()/auth.role().
 await db.exec(`
@@ -13,13 +13,10 @@ create schema auth;
 create table auth.users (id uuid primary key default gen_random_uuid(), email text);
 create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
 grant usage on schema auth to authenticated, anon, service_role;
+grant usage on schema public to anon;
 grant execute on function auth.uid() to authenticated, anon, service_role;
 `);
-await db.exec(fs.readFileSync(migracao, 'utf8'));
-await db.exec(`grant usage on schema public to authenticated, anon, service_role;
-grant all on all tables in schema public to authenticated, service_role;
-grant execute on function public.papel_atual(), public.eh_admin(), public.eh_equipe() to authenticated, service_role;
-grant execute on function public.conceder_xp(uuid,text,integer), public.gastar_giro(uuid,date), public.aceitar_troca(uuid,uuid) to service_role;`);
+for (const arq of fs.readdirSync(pasta).filter((f) => f.endsWith('.sql')).sort()) await db.exec(fs.readFileSync(pasta + arq, 'utf8'));
 console.log('migração aplicada');
 const q = async (s)=> (await db.query(s)).rows;
 const as = async (uid, role, sql) => { await db.exec(`set role ${role}; select set_config('request.jwt.claim.sub','${uid||''}',false);`); try { const r = await db.query(sql); return {ok:true,rows:r.rows}; } catch(e){ return {ok:false,err:e.message}; } finally { await db.exec('reset role;'); } };
@@ -89,6 +86,8 @@ t('A ficou com 1 da Arte 1 e 1 da Arte 2', qtd(A,'20000000-0000-0000-0000-000000
 t('B ficou com 1 da Arte 2 e 1 da Arte 1', qtd(B,'20000000-0000-0000-0000-000000000002')===1 && qtd(B,'20000000-0000-0000-0000-000000000001')===1);
 r = await as(A,'authenticated',`insert into trades(proposer_id,receiver_id,offered_collectible_id,requested_collectible_id) values ('${A}','${B}','20000000-0000-0000-0000-000000000001','20000000-0000-0000-0000-000000000002')`); t('não propõe troca sem cópia repetida (RN18)', !r.ok);
 r = await as(null,'service_role',`select aceitar_troca('${tid}','${B}')`); t('troca já aceita não repete', !r.ok);
+r = await as(null,'anon',`select * from games`); t('visitante sem login não lê o catálogo (RF01)', !r.ok);
+r = await as(null,'anon',`select * from profiles`); t('visitante sem login não lê perfis (RF01)', !r.ok);
 console.log(res.map(x=>x.join(' ')).join('\n'));
 const falhas = res.filter(x=>x[0]==='FALHOU').length;
 console.log(falhas ? 'HÁ FALHAS' : 'TODOS OS TESTES PASSARAM ('+res.length+')');
