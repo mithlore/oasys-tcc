@@ -374,6 +374,7 @@ oasys/
 - **Pendente:** `conceder-xp` (XP por ações como avaliar e comentar), a implementar com a tabela de XP da seção 12.
 - **Login e cadastro feitos (RF01):** `src/hooks/useAuth.tsx` (AuthProvider), `src/pages/Login.tsx`, `src/components/RotaProtegida.tsx` (todas as telas exigem login, só `/login` é aberta), `src/hooks/usePerfil.ts`, `src/lib/validacao.ts` (com testes) e ícones SVG em `src/components/icons/Icones.tsx`. O cabeçalho mostra elo, nível e nome. Falta testar o cadastro e o login reais com o Supabase (o ambiente do Claude não alcança o Supabase pelo navegador; testar no computador dos autores). No painel do Supabase, em Authentication, decidir se "Confirm email" fica ligado (em desenvolvimento é mais prático desligar).
 - **Arte da tela de login feita:** `src/components/login/ArteLogin.tsx` (SVG próprio, sem emoji; aparece só a partir de `lg`; animação só de entrada).
+- **Logo oficial:** `src/components/LogoOasys.tsx` (SVG vetorizado da logo dos autores: lua crescente, estrela e dunas, degradê lavanda a violeta). Usar sempre este componente, nunca uma lua desenhada à parte. Aparece no login e no cabeçalho.
 - **Próximo:** home em React (a partir de `design/`), catálogo e o restante das telas; por fim o seed do catálogo (seção 9).
 - **Antes de mexer no banco:** rodar `npm run test:rls`; ao criar tabela nova, ligar o RLS e acrescentar o caso ao teste.
 

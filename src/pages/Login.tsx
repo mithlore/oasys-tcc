@@ -7,6 +7,7 @@ import { supabaseConfigurado } from "@/lib/supabase";
 import { erroDaSenha, erroDoEmail, TAMANHO_MINIMO_SENHA } from "@/lib/validacao";
 import { cn } from "@/lib/utils";
 import ArteLogin from "@/components/login/ArteLogin";
+import LogoOasys from "@/components/LogoOasys";
 import {
   IconeAlerta,
   IconeCarregando,
@@ -84,7 +85,11 @@ export default function Login() {
       </aside>
       <div className="grid place-items-center px-4 py-10">
       <div className="w-full max-w-md animate-entrar">
-        <p className="mb-8 text-center font-titulo text-3xl font-bold tracking-[0.35em]">OASYS</p>
+        {/* Logo oficial e nome, centralizados acima do formulário */}
+        <div className="mb-8 flex flex-col items-center gap-3">
+          <LogoOasys tamanho={72} />
+          <p className="font-titulo text-3xl font-bold tracking-[0.35em]">OASYS</p>
+        </div>
 
         <div className="rounded-2xl border border-linha bg-painel p-6 sm:p-8">
           {/* Abas: alternam entre entrar e criar conta */}

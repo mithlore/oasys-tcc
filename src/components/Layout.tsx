@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { usePerfil } from "@/hooks/usePerfil";
 import { obterElo } from "@/lib/elos";
 import { IconeElo, IconeSair } from "@/components/icons/Icones";
+import LogoOasys from "@/components/LogoOasys";
 
 const LINKS = [
   { para: "/", rotulo: "Início" },
@@ -27,7 +28,11 @@ export default function Layout() {
     <div className="min-h-screen">
       <header className="border-b border-linha">
         <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-4">
-          <span className="font-titulo text-xl font-bold tracking-[0.3em]">OASYS</span>
+          {/* Logo + nome no canto esquerdo do cabeçalho */}
+          <span className="flex items-center gap-3">
+            <LogoOasys tamanho={30} />
+            <span className="font-titulo text-xl font-bold tracking-[0.3em]">OASYS</span>
+          </span>
           <ul className="flex flex-wrap gap-1">
             {LINKS.map((l) => (
               <li key={l.para}>
