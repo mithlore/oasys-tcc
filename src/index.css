@@ -25,6 +25,13 @@ body {
 /* Estrelas de constelação que piscam bem devagar */
 .estrela-pisca { animation: estrela-pisca 7s ease-in-out infinite; }
 @keyframes estrela-pisca { 50% { opacity: 0.35; } }
+/* Pontinhos que andam na arte do login: deriva lenta + cintilação */
+.particula {
+  animation: particula-deriva var(--dur, 30s) ease-in-out infinite alternate,
+             particula-brilha calc(var(--dur, 30s) / 4) ease-in-out infinite alternate;
+}
+@keyframes particula-deriva { to { transform: translate(var(--dx, 30px), var(--dy, 30px)); } }
+@keyframes particula-brilha { from { opacity: 0.2; } to { opacity: 0.9; } }
 .elo-surgindo {
   opacity: 0;
   animation: elo-surgir 600ms ease-out both;
@@ -34,5 +41,6 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
+  .particula, .portal-gira, .portal-respira { animation: none !important; }
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

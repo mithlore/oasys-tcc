@@ -32,6 +32,25 @@ const CEU = Array.from({ length: 110 }, () => ({
   cor: TONS[Math.floor(sorteio() * TONS.length)],
 }));
 
+// Pontinhos que andam: 40 estrelas que derivam bem devagar de um lado para o outro e
+// brilham e apagam, como cintilação. Cada uma tem seu próprio tamanho, distância percorrida,
+// duração (18 a 48 s) e atraso, para nunca se moverem em sincronia.
+const sorteioMov = gerador(23);
+const PARTICULAS = Array.from({ length: 40 }, () => {
+  const ang = sorteioMov() * Math.PI * 2; // direção da deriva
+  const dist = 25 + sorteioMov() * 55; // quanto andam (em unidades do quadro 800 x 900)
+  return {
+    x: sorteioMov() * 800,
+    y: sorteioMov() * 900,
+    r: 0.7 + sorteioMov() * 1.3,
+    dx: Math.cos(ang) * dist,
+    dy: Math.sin(ang) * dist,
+    dur: 18 + sorteioMov() * 30,
+    atraso: -sorteioMov() * 30, // atraso negativo: já começam no meio do caminho
+    cor: TONS[Math.floor(sorteioMov() * TONS.length)],
+  };
+});
+
 // Centro do portal e raio da órbita dos elos
 const CX = 400;
 const CY = 450;
@@ -92,6 +111,21 @@ export default function ArteLogin() {
         <svg viewBox="0 0 800 900" preserveAspectRatio="xMidYMid slice" className="h-full w-full">
           {CEU.map((e, i) => (
             <circle key={i} cx={e.x} cy={e.y} r={e.r} fill={e.cor} opacity={e.o} />
+          ))}
+        </svg>
+      </div>
+
+      {/* Camada 1B: pontinhos que andam (um pouco mais perto que o céu parado) */}
+      <div className="parallax-camada absolute -inset-[6%]" style={camada(PROFUNDIDADE.ceu + 6)} aria-hidden="true">
+        <svg viewBox="0 0 800 900" preserveAspectRatio="xMidYMid slice" className="h-full w-full">
+          {PARTICULAS.map((p, i) => (
+            <circle
+              key={i}
+              className="particula"
+              cx={p.x} cy={p.y} r={p.r} fill={p.cor}
+              // as variáveis CSS abaixo alimentam a animação "deriva" (ver src/index.css)
+              style={{ "--dx": `${p.dx}px`, "--dy": `${p.dy}px`, "--dur": `${p.dur}s`, animationDelay: `${p.atraso}s` } as React.CSSProperties}
+            />
           ))}
         </svg>
       </div>
