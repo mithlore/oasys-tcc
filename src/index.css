@@ -2,10 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ====== Temas (escuro e claro) ======
+   As cores ficam em variáveis CSS no formato "R G B" (sem vírgula), que o Tailwind lê (veja tailwind.config.ts).
+   O tema escuro é o padrão. O modo claro é ativado pela classe "claro" na tag <html> (botão em BotaoTema.tsx). */
+:root {
+  --c-fundo: 12 14 20;            /* fundo da página: #0c0e14 */
+  --c-painel: 19 22 31;           /* cartões e painéis: #13161f */
+  --c-tinta: 255 255 255;         /* texto e contornos suaves: branco */
+  --a-linha: 0.08;                /* transparência das linhas divisórias */
+  --c-violeta: 167 139 250;       /* #a78bfa */
+  --c-violeta-escuro: 109 40 217; /* #6d28d9 */
+  --c-azul: 59 130 246;           /* #3b82f6 */
+  --c-ouro: 253 224 71;           /* #fde047 */
+  --c-marca-a: 216 180 254;       /* degradê da logo e da escrita OASYS: início */
+  --c-marca-b: 124 58 237;        /* degradê da logo e da escrita OASYS: fim */
+  color-scheme: dark;
+}
+/* Modo claro: cinza-lavanda (não é branco puro) com um leve roxo, para combinar com o resto do site */
+:root.claro {
+  --c-fundo: 232 230 241;         /* #e8e6f1 cinza com toque de roxo */
+  --c-painel: 244 243 250;        /* #f4f3fa cartões um pouco mais claros que o fundo */
+  --c-tinta: 33 27 58;            /* #211b3a roxo bem escuro, em vez de preto */
+  --a-linha: 0.14;                /* linhas um pouco mais fortes, senão somem no fundo claro */
+  --c-violeta: 109 40 217;        /* violeta mais escuro: o claro (#a78bfa) fica fraco sobre fundo claro */
+  --c-violeta-escuro: 76 29 149;  /* #4c1d95 */
+  --c-azul: 37 99 235;
+  --c-ouro: 234 179 8;            /* dourado mais "queimado", para aparecer no claro */
+  --c-marca-a: 124 58 237;
+  --c-marca-b: 76 29 149;
+  color-scheme: light;
+}
+
 /* Tema base do OASYS (cores e fontes vêm do protótipo da home). */
 body {
-  @apply bg-fundo font-texto text-white antialiased;
+  @apply bg-fundo font-texto text-tinta antialiased;
+  transition: background-color 300ms ease, color 300ms ease; /* troca suave entre os temas */
 }
+
+/* ====== Botão de modo claro/escuro (BotaoTema.tsx) ======
+   Baseado no "toggle" de mobinkakei (Uiverse.io), adaptado: sem os textos AM/PM, em tamanho de cabeçalho
+   (a escala é reduzida no .tema-caixa) e usando o teclado/leitor de tela (checkbox de verdade).
+   Desmarcado = dia (sol, modo claro). Marcado = noite (lua e estrelas, modo escuro). */
+.tema-caixa { position: relative; display: inline-block; width: 56px; height: 31px; flex: none; }
+.tema-toggle { position: absolute; left: 0; top: 0; transform: scale(0.62); transform-origin: left top; cursor: pointer; display: block; }
+/* o checkbox fica escondido, mas continua focável pelo teclado */
+.tema-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.tema-trilho {
+  display: inline-block; position: relative; width: 90px; height: 50px;
+  background-color: #83d8ff; border-radius: 84px;
+  transition: background-color 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+.tema-input:focus-visible + .tema-trilho { outline: 3px solid rgb(var(--c-violeta)); outline-offset: 4px; }
+/* a bolinha: sol (dia) que vira lua (noite) */
+.tema-manopla {
+  display: inline-block; position: relative; z-index: 1; top: 3px; left: 3px; width: 44px; height: 44px;
+  background-color: #ffcf96; border-radius: 50px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: all 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55); transform: rotate(-45deg);
+}
+.tema-cratera { position: absolute; background-color: #e8cda5; opacity: 0; transition: opacity 200ms ease-in-out; border-radius: 100%; }
+.tema-cratera.c1 { top: 18px; left: 10px; width: 4px; height: 4px; }
+.tema-cratera.c2 { top: 28px; left: 22px; width: 6px; height: 6px; }
+.tema-cratera.c3 { top: 10px; left: 25px; width: 8px; height: 8px; }
+/* "nuvens" (dia) que viram estrelas (noite) */
+.tema-estrela { position: absolute; background-color: #fff; border-radius: 50%; transition: all 300ms cubic-bezier(0.445, 0.05, 0.55, 0.95); }
+.tema-estrela.e1 { top: 10px; left: 35px; z-index: 0; width: 30px; height: 3px; }
+.tema-estrela.e2 { top: 18px; left: 28px; z-index: 1; width: 30px; height: 3px; }
+.tema-estrela.e3 { top: 27px; left: 40px; z-index: 0; width: 30px; height: 3px; }
+.tema-estrela.e4, .tema-estrela.e5, .tema-estrela.e6 { opacity: 0; transition: all 300ms 0s cubic-bezier(0.445, 0.05, 0.55, 0.95); }
+.tema-estrela.e4 { top: 16px; left: 11px; z-index: 0; width: 2px; height: 2px; transform: translate3d(3px, 0, 0); }
+.tema-estrela.e5 { top: 32px; left: 17px; z-index: 0; width: 3px; height: 3px; transform: translate3d(3px, 0, 0); }
+.tema-estrela.e6 { top: 36px; left: 28px; z-index: 0; width: 2px; height: 2px; transform: translate3d(3px, 0, 0); }
+/* estado marcado = noite */
+.tema-input:checked + .tema-trilho { background-color: #749dd6; }
+.tema-input:checked + .tema-trilho .tema-manopla { background-color: #ffe5b5; transform: translate3d(40px, 0, 0) rotate(0); }
+.tema-input:checked + .tema-trilho .tema-cratera { opacity: 1; }
+.tema-input:checked + .tema-trilho .e1 { width: 2px; height: 2px; }
+.tema-input:checked + .tema-trilho .e2 { width: 4px; height: 4px; transform: translate3d(-5px, 0, 0); }
+.tema-input:checked + .tema-trilho .e3 { width: 2px; height: 2px; transform: translate3d(-7px, 0, 0); }
+.tema-input:checked + .tema-trilho .e4, .tema-input:checked + .tema-trilho .e5, .tema-input:checked + .tema-trilho .e6 { opacity: 1; transform: translate3d(0, 0, 0); }
+.tema-input:checked + .tema-trilho .e4 { transition: all 300ms 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95); }
+.tema-input:checked + .tema-trilho .e5 { transition: all 300ms 300ms cubic-bezier(0.445, 0.05, 0.55, 0.95); }
+.tema-input:checked + .tema-trilho .e6 { transition: all 300ms 400ms cubic-bezier(0.445, 0.05, 0.55, 0.95); }
 /* Elos da arte do login: começam invisíveis e acendem em sequência, uma única vez. */
 /* Portal da tela de login: anéis giram bem devagar e o brilho "respira" (RF01) */
 .portal-gira {
@@ -43,4 +120,11 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .particula, .portal-gira, .portal-respira { animation: none !important; }
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* A arte da tela de login é uma ilustração escura nos dois temas: aqui as variáveis voltam aos valores do escuro. */
+.tema-escuro-fixo {
+  --c-fundo: 12 14 20; --c-painel: 19 22 31; --c-tinta: 255 255 255; --a-linha: 0.08;
+  --c-violeta: 167 139 250; --c-violeta-escuro: 109 40 217; --c-azul: 59 130 246; --c-ouro: 253 224 71;
+  --c-marca-a: 216 180 254; --c-marca-b: 124 58 237;
 }

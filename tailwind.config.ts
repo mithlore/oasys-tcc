@@ -6,12 +6,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        fundo: "#0c0e14",
-        painel: "#13161f",
-        linha: "rgb(255 255 255 / 0.08)",
-        violeta: { DEFAULT: "#a78bfa", escuro: "#6d28d9" },
-        azul: "#3b82f6",
-        ouro: "#fde047",
+        // Cada cor lê uma variável CSS (definida em src/index.css), uma para o tema escuro e outra para o claro.
+        // O "<alpha-value>" deixa classes como bg-violeta/15 e text-tinta/60 continuarem funcionando.
+        fundo: "rgb(var(--c-fundo) / <alpha-value>)",
+        painel: "rgb(var(--c-painel) / <alpha-value>)",
+        tinta: "rgb(var(--c-tinta) / <alpha-value>)", // cor do texto e dos contornos suaves (branco no escuro, roxo-escuro no claro)
+        linha: "rgb(var(--c-tinta) / calc(<alpha-value> * var(--a-linha)))",
+        violeta: { DEFAULT: "rgb(var(--c-violeta) / <alpha-value>)", escuro: "rgb(var(--c-violeta-escuro) / <alpha-value>)" },
+        azul: "rgb(var(--c-azul) / <alpha-value>)",
+        ouro: "rgb(var(--c-ouro) / <alpha-value>)",
       },
       // Animação de entrada discreta: sobe 8 px e aparece em 220 ms (sem efeitos constantes).
       keyframes: {

@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import ArteLogin from "@/components/login/ArteLogin";
 import LogoOasys from "@/components/LogoOasys";
 import WordmarkOasys from "@/components/WordmarkOasys";
+import BotaoTema from "@/components/BotaoTema";
 import {
   IconeAlerta,
   IconeCarregando,
@@ -84,7 +85,9 @@ export default function Login() {
       <aside className="hidden lg:block" aria-label="Ilustração">
         <ArteLogin />
       </aside>
-      <div className="grid place-items-center px-4 py-10">
+      <div className="relative grid place-items-center px-4 py-10">
+      {/* Botão de tema no canto: dá para trocar o modo antes mesmo de entrar */}
+      <div className="absolute right-4 top-4"><BotaoTema /></div>
       <div className="w-full max-w-md animate-entrar">
         {/* Logo oficial e nome, centralizados acima do formulário */}
         <div className="mb-8 flex flex-col items-center gap-3">
@@ -95,7 +98,7 @@ export default function Login() {
 
         <div className="rounded-2xl border border-linha bg-painel p-6 sm:p-8">
           {/* Abas: alternam entre entrar e criar conta */}
-          <div role="tablist" aria-label="Acesso" className="mb-6 grid grid-cols-2 rounded-xl bg-white/5 p-1 text-sm">
+          <div role="tablist" aria-label="Acesso" className="mb-6 grid grid-cols-2 rounded-xl bg-tinta/5 p-1 text-sm">
             {(["entrar", "cadastrar"] as Modo[]).map((m) => (
               <button
                 key={m}
@@ -105,7 +108,7 @@ export default function Login() {
                 onClick={() => trocarModo(m)}
                 className={cn(
                   "rounded-lg px-3 py-2 font-medium transition-colors",
-                  modo === m ? "bg-violeta/20 text-violeta" : "text-white/60 hover:text-white",
+                  modo === m ? "bg-violeta/20 text-violeta" : "text-tinta/60 hover:text-tinta",
                 )}
               >
                 {m === "entrar" ? "Entrar" : "Criar conta"}
@@ -139,7 +142,7 @@ export default function Login() {
                   type="button"
                   onClick={() => setMostrarSenha((v) => !v)}
                   aria-label={mostrarSenha ? "Esconder a senha" : "Mostrar a senha"}
-                  className="text-white/50 hover:text-white"
+                  className="text-tinta/50 hover:text-tinta"
                 >
                   {mostrarSenha ? <IconeOlhoFechado className="h-5 w-5" /> : <IconeOlho className="h-5 w-5" />}
                 </button>
@@ -197,7 +200,7 @@ function Campo(props: {
   const idMensagem = `${props.id}-msg`;
   return (
     <div>
-      <label htmlFor={props.id} className="mb-1.5 block text-sm text-white/70">
+      <label htmlFor={props.id} className="mb-1.5 block text-sm text-tinta/70">
         {props.rotulo}
       </label>
       <div
@@ -206,7 +209,7 @@ function Campo(props: {
           props.erro ? "border-red-400/60" : "border-linha",
         )}
       >
-        <span className="text-white/40">{props.icone}</span>
+        <span className="text-tinta/40">{props.icone}</span>
         <input
           id={props.id}
           type={props.tipo}
@@ -215,11 +218,11 @@ function Campo(props: {
           onChange={(e) => props.aoMudar(e.target.value)}
           aria-invalid={Boolean(props.erro)}
           aria-describedby={idMensagem}
-          className="w-full bg-transparent text-white outline-none placeholder:text-white/30"
+          className="w-full bg-transparent text-tinta outline-none placeholder:text-tinta/30"
         />
         {props.acao}
       </div>
-      <p id={idMensagem} className={cn("mt-1 min-h-[1.25rem] text-xs", props.erro ? "text-red-300" : "text-white/40")}>
+      <p id={idMensagem} className={cn("mt-1 min-h-[1.25rem] text-xs", props.erro ? "text-red-300" : "text-tinta/40")}>
         {props.erro ?? props.dica ?? ""}
       </p>
     </div>

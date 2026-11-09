@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OASYS</title>
     <!-- Ícone da aba: a logo do OASYS (arquivo em public/favicon.svg) -->
+    <!-- Aplica o tema salvo (claro/escuro) antes de a página aparecer, para não "piscar". Só guarda uma preferência visual no navegador. -->
+    <script>
+      try { if (localStorage.getItem("oasys-tema") === "claro") document.documentElement.classList.add("claro"); } catch (e) {}
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

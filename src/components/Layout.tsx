@@ -8,6 +8,7 @@ import { obterElo } from "@/lib/elos";
 import { IconeElo, IconeSair } from "@/components/icons/Icones";
 import LogoOasys from "@/components/LogoOasys";
 import WordmarkOasys from "@/components/WordmarkOasys";
+import BotaoTema from "@/components/BotaoTema";
 
 const LINKS = [
   { para: "/", rotulo: "Início" },
@@ -41,7 +42,7 @@ export default function Layout() {
                   to={l.para}
                   end={l.para === "/"}
                   className={({ isActive }) =>
-                    cn("rounded-lg px-3 py-2 text-sm text-white/70 hover:text-white", isActive && "bg-violeta/15 text-violeta")
+                    cn("rounded-lg px-3 py-2 text-sm text-tinta/70 hover:text-tinta", isActive && "bg-violeta/15 text-violeta")
                   }
                 >
                   {l.rotulo}
@@ -52,10 +53,11 @@ export default function Layout() {
 
           {/* Quem está logado: elo + nível + nome + sair */}
           <div className="ml-auto flex items-center gap-3 text-sm">
+            <BotaoTema />
             {perfil && elo && (
               <span className="flex items-center gap-2" title={`Elo ${elo.nome}`}>
                 <IconeElo cor={elo.cor} cor2={elo.cor2} className="h-6 w-6" />
-                <span className="text-white/80">
+                <span className="text-tinta/80">
                   <span className="hidden sm:inline">{perfil.username} · </span>
                   Nível {perfil.level}
                 </span>
@@ -64,7 +66,7 @@ export default function Layout() {
             <button
               type="button"
               onClick={() => void sair()}
-              className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-white/60 hover:bg-white/5 hover:text-white"
+              className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-tinta/60 hover:bg-tinta/5 hover:text-tinta"
               aria-label={`Sair da conta ${usuario?.email ?? ""}`}
             >
               <IconeSair className="h-5 w-5" />

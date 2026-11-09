@@ -96,7 +96,7 @@ export default function ArteLogin() {
   });
 
   return (
-    <div ref={raiz} className="relative h-full min-h-screen w-full overflow-hidden bg-fundo">
+    <div ref={raiz} className="tema-escuro-fixo relative h-full text-white min-h-screen w-full overflow-hidden bg-[#0c0e14]">
       {/* Brilhos de fundo (fixos): violeta no centro e um toque dourado no alto, a "Lenda" */}
       <div
         className="absolute inset-0"
@@ -172,12 +172,12 @@ export default function ArteLogin() {
       </div>
 
       {/* Escurece a base para o texto ficar legível */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-fundo to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0c0e14] to-transparent" />
 
       {/* Frase de apresentação */}
       <div className="absolute inset-x-10 bottom-10">
         <p className="font-titulo text-4xl font-bold leading-tight">
-          Descubra seu <span className="text-violeta">próximo</span> jogo.
+          Descubra seu <span className="text-[#a78bfa]">próximo</span> jogo.
         </p>
         <p className="mt-3 max-w-md text-sm text-white/65">
           Catálogo, comunidade e conquistas em um só lugar. Do Ferro à Lenda Absoluta.

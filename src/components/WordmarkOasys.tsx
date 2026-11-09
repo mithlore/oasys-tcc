@@ -39,8 +39,8 @@ export default function WordmarkOasys({ altura = 24, className }: Props) {
       <defs>
         {/* degradê lavanda → violeta, na largura toda (userSpaceOnUse faz as letras dividirem o mesmo degradê) */}
         <linearGradient id={grad} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="320" y2="0">
-          <stop offset="0" stopColor="#e9d5ff" />
-          <stop offset="1" stopColor="#8b5cf6" />
+          <stop offset="0" style={{ stopColor: "rgb(var(--c-marca-a))" }} />
+          <stop offset="1" style={{ stopColor: "rgb(var(--c-marca-b))" }} />
         </linearGradient>
         {/* máscaras: tudo branco aparece; a risca preta é o "corte" diagonal no meio de cada S */}
         <mask id={corte1} maskUnits="userSpaceOnUse" x="0" y="0" width="320" height="64">

@@ -13,7 +13,7 @@ export default function RotaProtegida() {
   // para quem já está logado não ver a tela de login piscar a cada recarga.
   if (carregando) {
     return (
-      <div className="grid min-h-screen place-items-center text-white/60" role="status" aria-label="Carregando">
+      <div className="grid min-h-screen place-items-center text-tinta/60" role="status" aria-label="Carregando">
         <IconeCarregando className="h-7 w-7 animate-spin" />
       </div>
     );

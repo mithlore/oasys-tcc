@@ -20,14 +20,14 @@ export default function ProgressaoElos() {
           Do Ferro à <span className="text-violeta">Lenda Absoluta.</span>
         </h2>
         {/* Texto de apoio com estados de carregamento e de erro */}
-        {perfil.isLoading && <div className="mt-3 h-5 w-72 animate-pulse rounded bg-white/10" aria-busy="true" />}
+        {perfil.isLoading && <div className="mt-3 h-5 w-72 animate-pulse rounded bg-tinta/10" aria-busy="true" />}
         {perfil.isError && (
           <p className="mt-3 flex items-center gap-1.5 text-sm text-red-300" role="alert">
             <IconeAlerta className="h-4 w-4" /> Não foi possível carregar seu elo.
           </p>
         )}
         {eloAtual && prog && (
-          <p className="mt-2 text-white/60">
+          <p className="mt-2 text-tinta/60">
             Você está no {eloAtual.nome}.{" "}
             {prog.xpProximoNivel ? `Faltam ${prog.faltam} XP para o nível ${prog.nivel + 1}.` : "Você chegou ao nível máximo."}
           </p>
@@ -42,16 +42,16 @@ export default function ProgressaoElos() {
           {ELOS.map((elo) => {
             const voce = eloAtual?.chave === elo.chave;
             return (
-              <li key={elo.chave} className="relative grid justify-items-center gap-2 text-center text-xs text-white/55">
+              <li key={elo.chave} className="relative grid justify-items-center gap-2 text-center text-xs text-tinta/55">
                 {voce && (
-                  <span className="absolute -top-7 rounded bg-ouro px-1.5 py-0.5 font-titulo text-[10px] font-bold tracking-wider text-fundo">VOCÊ</span>
+                  <span className="absolute -top-7 rounded bg-ouro px-1.5 py-0.5 font-titulo text-[10px] font-bold tracking-wider text-[#0c0e14]">VOCÊ</span>
                 )}
                 <IconeElo
                   cor={elo.cor}
                   cor2={elo.cor2}
                   className={cn("h-9 w-9 transition-transform", voce && "scale-125 drop-shadow-[0_0_12px_rgba(253,224,71,0.5)]")}
                 />
-                <b className={cn("font-titulo text-[13px]", voce ? "text-white" : "text-white/85")}>{elo.nome}</b>
+                <b className={cn("font-titulo text-[13px]", voce ? "text-tinta" : "text-tinta/85")}>{elo.nome}</b>
                 <span>Nível {elo.nivelInicial}–{elo.nivelInicial + NIVEIS_POR_ELO - 1}</span>
               </li>
             );

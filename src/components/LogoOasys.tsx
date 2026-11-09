@@ -29,8 +29,8 @@ export default function LogoOasys({ tamanho = 32, className }: Props) {
       <defs>
         {/* Degradê da logo: lavanda no canto superior esquerdo, violeta forte embaixo à direita */}
         <linearGradient id={id} x1="0.15" y1="0.1" x2="0.8" y2="1">
-          <stop offset="0" stopColor="#d8b4fe" />
-          <stop offset="1" stopColor="#7c3aed" />
+          <stop offset="0" style={{ stopColor: "rgb(var(--c-marca-a))" }} />
+          <stop offset="1" style={{ stopColor: "rgb(var(--c-marca-b))" }} />
         </linearGradient>
       </defs>
       <path d={DESENHO} fill={`url(#${id})`} />
