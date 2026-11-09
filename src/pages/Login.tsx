@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabaseConfigurado } from "@/lib/supabase";
 import { erroDaSenha, erroDoEmail, TAMANHO_MINIMO_SENHA } from "@/lib/validacao";
 import { cn } from "@/lib/utils";
+import ArteLogin from "@/components/login/ArteLogin";
 import {
   IconeAlerta,
   IconeCarregando,
@@ -76,7 +77,12 @@ export default function Login() {
   }
 
   return (
-    <main className="grid min-h-screen place-items-center px-4 py-10">
+    // No computador: arte à esquerda e formulário à direita. No celular, só o formulário.
+    <main className="grid min-h-screen lg:grid-cols-[1.1fr_1fr]">
+      <aside className="hidden lg:block" aria-label="Ilustração">
+        <ArteLogin />
+      </aside>
+      <div className="grid place-items-center px-4 py-10">
       <div className="w-full max-w-md animate-entrar">
         <p className="mb-8 text-center font-titulo text-3xl font-bold tracking-[0.35em]">OASYS</p>
 
@@ -162,6 +168,7 @@ export default function Login() {
             </button>
           </form>
         </div>
+      </div>
       </div>
     </main>
   );

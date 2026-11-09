@@ -6,6 +6,15 @@
 body {
   @apply bg-fundo font-texto text-white antialiased;
 }
+/* Elos da arte do login: começam invisíveis e acendem em sequência, uma única vez. */
+.elo-surgindo {
+  opacity: 0;
+  animation: elo-surgir 600ms ease-out both;
+}
+@keyframes elo-surgir {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
